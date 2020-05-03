@@ -26,7 +26,15 @@ def lambda_handler(event, context):
         print('Received day: ' + str(event['headers']['day']))
         day = str(event['headers']['day'])
     
-    print(name)
+    if event['body']:
+        body = json.loads(event['body'])
+        if body['time']:
+            time = body['time']
+
+    greeting = 'Good {0}, {1} of {2}.'.format(time, name, city) 
+    if day:
+        greeting += ' Happy {0}'.format(day)
+    
     response = {
         'statusCode': response_code,
         'headers': {
@@ -34,4 +42,5 @@ def lambda_handler(event, context):
         },
         'body': json.dumps(response_body)
     }
+    print('response: ' + json.dumps(response))
     return response
