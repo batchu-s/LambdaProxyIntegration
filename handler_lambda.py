@@ -1,5 +1,5 @@
 import json
-
+import base64
 
 def lambda_handler(event, context):
     name = 'Bot'
@@ -7,10 +7,6 @@ def lambda_handler(event, context):
     time = 'day'
     day = ''
     response_code = 200
-    response_body = {
-        'message': 'greeting',
-        'input': json.dumps(event)
-    }
     print('request: ' + json.dumps(event))
     
 
@@ -27,13 +23,21 @@ def lambda_handler(event, context):
         day = str(event['headers']['day'])
     
     if event['body']:
-        body = json.loads(event['body'])
-        if body['time']:
-            time = body['time']
+        base64_bytes = event['body'].encode('ascii')
+        body_bytes = base64.b64decode(base64_bytes)
+        body_str = body_bytes.decode('ascii')
+        body_json = json.loads(body_str)
+        if body_json['time']:
+            time = body_json['time']
 
     greeting = 'Good {0}, {1} of {2}.'.format(time, name, city) 
     if day:
         greeting += ' Happy {0}'.format(day)
+
+    response_body = {
+        'message': greeting,
+        'input': json.dumps(event)
+    }
     
     response = {
         'statusCode': response_code,
