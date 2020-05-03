@@ -26,7 +26,20 @@ Resources:
         - Key: Purpose
           Value: LambdaProxyIntegration
 
+  MyApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: APP-API
+      Description: This is the Api created to demonstrate Lambda Proxy 'LambdaProxyIntegration
+      BinaryMediaTypes:
+        - '*/*'
+      EndpointConfiguration:
+        Types:
+          - EDGE
+      FailOnWarnings: True
 
 Outputs:
   BackendLambdaName:
     Value: !Ref BackendLambda
+  MyApiName:
+    Value: !Ref MyApi
