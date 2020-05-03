@@ -59,6 +59,14 @@ Resources:
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
           - { LambdaArn: !GetAtt BackendLambda.Arn }
 
+  BackendLambdaPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn: BackendLambda
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt BackendLambda.Arn
+      Principal: apigateway.amazonaws.com
+
 Outputs:
   BackendLambdaName:
     Value: !Ref BackendLambda
