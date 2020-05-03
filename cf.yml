@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: 'LambdaProxyIntegration'
+# Metadata: 
+
+# Parameters: 
+
+# Mappings: 
+
+# Conditions: 
+
+Resources:
+  BackendLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: lambda-proxy-integration
+        S3Key: handler_lambda.zip
+      Description: Backend Lambda Function
+      Runtime: python3.8
+      Role: !Sub 'arn:aws:iam::${AWS::AccountId}:role/SVC_LAMBDA_ROLE'
+      # Role: 'Fn::Join: ["", ["arn:aws:iam::", { Ref: "AWS::AccountId" }, ":role/SVC_LAMBDA_ROLE"]]'
+      FunctionName: BackendLambda
+      Handler: handler_lambda.lambda_handler
+      MemorySize: 128
+      Timeout: 120
+      Tags:
+        - Key: Purpose
+          Value: LambdaProxyIntegration
+
+
+Outputs:
+  BackendLambdaName:
+    Value: !Ref BackendLambda
